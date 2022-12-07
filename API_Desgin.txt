@@ -1,0 +1,17 @@
+Read
+sender information is int header
+
+{
+    'user_id': '' 
+}
+
+
+Write
+sender information is int header
+
+{
+    'user_id': 
+    'name': ''
+    'role': ''
+    'email': ''
+}
