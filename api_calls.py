@@ -35,9 +35,38 @@ def mongo_write():
         return Response(response=json.dumps({"Error": "Please provide correct API information"}),
                         status=400,
                         mimetype='application/json')
-    print('here')
     object = MongoAPI(body,sender_id)
     response = object.write()
+    return Response(response=json.dumps(response),
+                    status=200,
+                    mimetype='application/json')
+
+@app.route('/mongodb', methods=['DELETE'])
+def mongo_delete():
+    sender_id = request.headers.get('sender_id')
+    body = Document_By_ID(request.json)
+    if body is None or body == {} or body.id is None or sender_id is None or sender_id == '':
+        return Response(response=json.dumps({"Error": "Please provide correct API information"}),
+                        status=400,
+                        mimetype='application/json')
+
+    object = MongoAPI(body,sender_id)
+    response = object.delete()
+    return Response(response=json.dumps(response),
+                    status=200,
+                    mimetype='application/json')
+
+@app.route('/mongodb', methods=['PUT'])
+def mongo_update():
+    sender_id = request.headers.get('sender_id')
+    body = Document_To_Update(request.json)
+    if body is None or body == {} or body.id is None or sender_id is None or sender_id == '':
+        return Response(response=json.dumps({"Error": "Please provide correct API information"}),
+                        status=400,
+                        mimetype='application/json')
+
+    object = MongoAPI(body, sender_id)
+    response = object.update()
     return Response(response=json.dumps(response),
                     status=200,
                     mimetype='application/json')
