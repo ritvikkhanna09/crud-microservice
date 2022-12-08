@@ -1,14 +1,13 @@
 from flask import Flask, request, json, Response
 from pymongo import MongoClient
 import logging as log
-from data import *
+from classes import *
 
 class MongoAPI:
     def __init__(self, body, sender_id):
-        # log.basicConfig(level=log.DEBUG, format='%(asctime)s %(levelname)s:\n%(message)s\n')
-        # self.client = MongoClient("mongodb://localhost:27017/")  # When only Mongo DB is running on Docker.
-        self.client = MongoClient("mongodb://0.0.0.0:4004/")     # When both Mongo and This application is running on
-                                                                    # Docker and we are using Docker Compose
+        # log.basicConfig(level=log.DEBUG, format='%(asctime)s %(levelname)s:\n%(message)s\n')\
+        # self.client = MongoClient("mongodb://localhost:27017/")
+        self.client = MongoClient("mongodb://0.0.0.0:4004/")     
         cursor = self.client['users']
         self.information = cursor['information']
         self.roles = cursor['roles']
@@ -101,8 +100,6 @@ class MongoAPI:
         while(self.roles.find_one({'id':unique_id})):
             unique_id = self.get_next_id()
         self.body.id = unique_id
-
-
         
         response1 = self.information.insert_one(self.body.__dict__)
         response2 = self.roles.insert_one({'role':self.body.role ,'id': self.body.id})
@@ -165,8 +162,6 @@ class MongoAPI:
             if find_response_role is None:
                 output = {'message': 'document(in roles) does not exists', 'status': '404'}
                 return output
-
-
 
         response1 = self.information.update_one(filter, update)
         response2 = None

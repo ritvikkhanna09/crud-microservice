@@ -1,6 +1,6 @@
 from flask import Flask, request, json, Response
 from crud import MongoAPI
-from data import *
+from classes import *
 
 app = Flask(__name__)
 

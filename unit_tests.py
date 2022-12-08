@@ -1,7 +1,6 @@
 from api_calls import app
 from flask import json
 import unittest
-import time
 
 class API_Test(unittest.TestCase):
 
