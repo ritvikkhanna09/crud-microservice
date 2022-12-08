@@ -11,7 +11,7 @@ def base():
                     mimetype='application/json')
 
 
-@app.route('/mongodb', methods=['GET'])
+@app.route('/user', methods=['GET'])
 def mongo_read():
     sender_id = request.headers.get('sender_id')
     body = Document_By_ID(request.json)
@@ -23,25 +23,26 @@ def mongo_read():
     object = MongoAPI(body,sender_id)
     response = object.read()
     return Response(response=json.dumps(response),
-                    status=200,
+                    status=response['status'],
                     mimetype='application/json')
 
 
-@app.route('/mongodb', methods=['POST'])
+@app.route('/user', methods=['POST'])
 def mongo_write():
     sender_id = request.headers.get('sender_id') 
     body = Document_To_Add(request.json)
-    if body is None or body == {} or body.email is None or body.name is None or body.role is None:
+    if body is None or body == {} or body.email is None or body.name is None \
+        or body.role is None or body.role not in ['admin','modifier','watcher']:
         return Response(response=json.dumps({"Error": "Please provide correct API information"}),
                         status=400,
                         mimetype='application/json')
     object = MongoAPI(body,sender_id)
     response = object.write()
     return Response(response=json.dumps(response),
-                    status=200,
+                    status=response['status'],
                     mimetype='application/json')
 
-@app.route('/mongodb', methods=['DELETE'])
+@app.route('/user', methods=['DELETE'])
 def mongo_delete():
     sender_id = request.headers.get('sender_id')
     body = Document_By_ID(request.json)
@@ -53,10 +54,10 @@ def mongo_delete():
     object = MongoAPI(body,sender_id)
     response = object.delete()
     return Response(response=json.dumps(response),
-                    status=200,
+                    status=response['status'],
                     mimetype='application/json')
 
-@app.route('/mongodb', methods=['PUT'])
+@app.route('/user', methods=['PUT'])
 def mongo_update():
     sender_id = request.headers.get('sender_id')
     body = Document_To_Update(request.json)
@@ -68,7 +69,7 @@ def mongo_update():
     object = MongoAPI(body, sender_id)
     response = object.update()
     return Response(response=json.dumps(response),
-                    status=200,
+                    status=response['status'],
                     mimetype='application/json')
 
 if __name__ == '__main__':
