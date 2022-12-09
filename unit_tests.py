@@ -1,4 +1,4 @@
-from api_calls import app
+from app import app
 from flask import json
 import unittest
 
@@ -330,7 +330,7 @@ class API_Test(unittest.TestCase):
                             },
                     headers={'sender-id': watcher_id})
         response_code = response.status_code
-        self.assertEqual(response_code , 401)
+        self.assertEqual(response_code , 403)
 
         response = tester.put('/user',
                     json={
@@ -339,7 +339,7 @@ class API_Test(unittest.TestCase):
                             },
                     headers={'sender-id': watcher_id})
         response_code = response.status_code
-        self.assertEqual(response_code , 401)
+        self.assertEqual(response_code , 403)
 
         response = tester.delete('/user',
                     json={
@@ -347,7 +347,7 @@ class API_Test(unittest.TestCase):
                             },
                     headers={'sender-id': watcher_id})
         response_code = response.status_code
-        self.assertEqual(response_code , 401)
+        self.assertEqual(response_code , 403)
 
         response = tester.get('/user',
                     json={'id':"0000"},
@@ -388,7 +388,7 @@ class API_Test(unittest.TestCase):
                             },
                     headers={'sender-id': modifier_id})
         response_code = response.status_code
-        self.assertEqual(response_code , 401)
+        self.assertEqual(response_code , 403)
 
         response = tester.get('/user',
                     json={'id':"0000"},
