@@ -144,6 +144,9 @@ class MongoAPI:
 
         return output
 
+    """
+    Function to perform DELETE
+    """
     def delete(self):
         # sender action permission check
         if self.check_sender_permission('DELETE') is False:
@@ -171,7 +174,9 @@ class MongoAPI:
 
         return output
 
-
+    """
+    Function to perform UPDATE
+    """
     def update(self):
         # sender action permission check
         if self.check_sender_permission('PUT') is False:
