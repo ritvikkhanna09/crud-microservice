@@ -1,5 +1,6 @@
 # Ignoring Environment Files
 .idea
 venv
+/tests/venv
 __pycache__
 .DS_Store
