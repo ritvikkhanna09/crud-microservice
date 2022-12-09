@@ -14,9 +14,9 @@ RUN pip install -r requirements.txt
 COPY . /app
 
 # Exposing an internal port
-EXPOSE 5001
+EXPOSE 4001
 
 # configure the container to run in an executed manner
 ENTRYPOINT [ "python" ]
 
-CMD ["app.py" ]
+CMD [ "app.py" ]

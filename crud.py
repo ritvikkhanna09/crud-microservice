@@ -1,13 +1,12 @@
 from flask import Flask, request, json, Response
 from pymongo import MongoClient
-import logging as log
 from classes import *
 
 class MongoAPI:
     def __init__(self, body, sender_id):
-        # log.basicConfig(level=log.DEBUG, format='%(asctime)s %(levelname)s:\n%(message)s\n')\
-        # self.client = MongoClient("mongodb://localhost:27017/")
-        self.client = MongoClient("mongodb://0.0.0.0:4004/")
+        # self.client = MongoClient("mongodb://0.0.0.0:27017/")
+        self.client = MongoClient("mongodb://mongodb_service:27017/")
+
 
         # get database/collection cursors
         cursor = self.client['users']
@@ -26,7 +25,6 @@ class MongoAPI:
     not exists or is empty
     """
     def initialize_collections(self):
-
         sequence = self.sequence.count_documents({})
         information = self.information.count_documents({})
         if sequence == 0:

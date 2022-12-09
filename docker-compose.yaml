@@ -1,11 +1,13 @@
-version: "3"
-services: 
-    mymongo_1:
-        image: "mongo"
-    
-    myreader:
-        build: .
-        depends_on: 
-            - mymongo_1
-        ports:
-            - "5001:5001"
+version: "1"
+services:
+  db:
+    image: mongo:latest
+    hostname: mongodb_service
+    ports:
+      - 27017:27017
+  app:
+    build: .
+    ports:
+      - "4001:4001"
+    links:
+      - db

@@ -1,19 +1,24 @@
 from app import app
 from flask import json
 import unittest
+import requests
+
+api_url = "http://0.0.0.0:4001/"
+
+"""
+run by command `python unit_tests.py -v`
+"""
+
 
 class API_Test(unittest.TestCase):
 
     """
     Unit Test 0: connection test
     """
-    def test_connection(self):
-        tester = app.test_client(self)
-        response = tester.get('/')
+    def test0_connection(self):
+        response = requests.get(api_url)
         response_code = response.status_code
-        response_mimetype = response.mimetype
         self.assertEqual(response_code , 200)
-        self.assertEqual(response_mimetype , 'application/json')
 
 
     """
@@ -23,8 +28,7 @@ class API_Test(unittest.TestCase):
         - delete the user 
     """
     def test1(self):
-        tester = app.test_client(self)
-        response = tester.post('/user',
+        response = requests.post( api_url+'user',
                     json={
                             "name" : "johnson",
                             "role" : "modifier",
@@ -36,7 +40,7 @@ class API_Test(unittest.TestCase):
         self.assertEqual(response_code , 200)
         user_id = str(response_json['data']['id'])
 
-        response = tester.post('/user',
+        response = requests.post( api_url+'user',
                     json={
                             "name" : "johnson",
                             "role" : "modifier",
@@ -46,7 +50,7 @@ class API_Test(unittest.TestCase):
         response_code = response.status_code
         self.assertEqual(response_code , 409)
 
-        response = tester.delete('/user',
+        response = requests.delete( api_url+'user',
                     json={
                             "id" : user_id
                             },
@@ -54,7 +58,7 @@ class API_Test(unittest.TestCase):
         response_code = response.status_code
         self.assertEqual(response_code , 200)
 
-        response = tester.post('/user',
+        response = requests.post( api_url+'user',
             json={
                     "name" : "johnson",
                     "email" : "john@api.com"
@@ -71,8 +75,7 @@ class API_Test(unittest.TestCase):
         - delete the user = 404 error
     """
     def test2(self):
-        tester = app.test_client(self)
-        response = tester.post('/user',
+        response = requests.post( api_url+'user',
                     json={
                             "name" : "ben",
                             "role" : "watcher",
@@ -84,7 +87,7 @@ class API_Test(unittest.TestCase):
         self.assertEqual(response_code , 200)
         user_id = str(response_json['data']['id'])
 
-        response = tester.delete('/user',
+        response = requests.delete( api_url+'user',
                     json={
                             "id" : user_id
                             },
@@ -93,7 +96,7 @@ class API_Test(unittest.TestCase):
         self.assertEqual(response_code , 200)
         
 
-        response = tester.delete('/user',
+        response = requests.delete( api_url+'user',
                     json={
                             "id" : user_id
                             },
@@ -108,8 +111,7 @@ class API_Test(unittest.TestCase):
         - name, email, role are required fields
     """
     def test3(self):
-        tester = app.test_client(self)
-        response = tester.post('/user',
+        response = requests.post( api_url+'user',
             json={
                     "name" : "johnson",
                     "email" : "john@api.com"
@@ -130,10 +132,7 @@ class API_Test(unittest.TestCase):
     """
 
     def test4(self):
-        tester = app.test_client(self)
-
-
-        response = tester.post('/user',
+        response = requests.post( api_url+'user',
                     json={
                             "name" : "Gini",
                             "role" : "modifier",
@@ -146,7 +145,7 @@ class API_Test(unittest.TestCase):
         user_id = str(response_json['data']['id'])
 
 
-        response = tester.put('/user',
+        response = requests.put( api_url+'user',
                     json={
                             "id" : user_id,
                             "name" : "Adam",
@@ -158,7 +157,7 @@ class API_Test(unittest.TestCase):
         self.assertEqual(response_code , 200)
 
 
-        response = tester.put('/user',
+        response = requests.put( api_url+'user',
                     json={
                             "id" : user_id,
                             "email" : "adam123@api.com"
@@ -167,7 +166,7 @@ class API_Test(unittest.TestCase):
         response_code = response.status_code
         self.assertEqual(response_code , 200)
 
-        response = tester.put('/user',
+        response = requests.put( api_url+'user',
                     json={
                             "id" : user_id,
                             "role" : "modifier"
@@ -176,7 +175,7 @@ class API_Test(unittest.TestCase):
         response_code = response.status_code
         self.assertEqual(response_code , 200)
 
-        response = tester.put('/user',
+        response = requests.put( api_url+'user',
                     json={
                             "id" : "0000",
                             "name" : "Adam",
@@ -187,7 +186,7 @@ class API_Test(unittest.TestCase):
         response_code = response.status_code
         self.assertEqual(response_code , 404)
         
-        response = tester.delete('/user',
+        response = requests.delete( api_url+'user',
                     json={
                             "id" : user_id
                             },
@@ -206,10 +205,10 @@ class API_Test(unittest.TestCase):
         - delete 2 users
     """
     def test5(self):
-        tester = app.test_client(self)
+        
 
 
-        response = tester.post('/user',
+        response = requests.post( api_url+'user',
                     json={
                             "name" : "Sam",
                             "role" : "watcher",
@@ -222,7 +221,7 @@ class API_Test(unittest.TestCase):
         user_id_1 = str(response_json['data']['id'])
 
 
-        response = tester.post('/user',
+        response = requests.post( api_url+'user',
                     json={
                             "name" : "olive",
                             "role" : "admin",
@@ -235,7 +234,7 @@ class API_Test(unittest.TestCase):
         user_id_2 = str(response_json['data']['id'])
 
         
-        response = tester.get('/user',
+        response = requests.get( api_url+'user',
                     json={'id':user_id_1},
                     headers={'sender-id': '1000'})
         response_code = response.status_code
@@ -243,7 +242,7 @@ class API_Test(unittest.TestCase):
         self.assertEqual(response_code , 200)
         self.assertEqual(len(response_json['data']) == 1 , True)
 
-        response = tester.get('/user',
+        response = requests.get( api_url+'user',
                     json={'id':'0000'},
                     headers={'sender-id': '1000'})
         response_code = response.status_code
@@ -251,7 +250,7 @@ class API_Test(unittest.TestCase):
         self.assertEqual(response_code , 200)
         self.assertEqual(len(response_json['data']) >= 1 , True)
 
-        response = tester.delete('/user',
+        response = requests.delete( api_url+'user',
                     json={
                             "id" : user_id_1
                             },
@@ -260,7 +259,7 @@ class API_Test(unittest.TestCase):
         response_json = json.loads(response.text)
         self.assertEqual(response_code , 200)
 
-        response = tester.delete('/user',
+        response = requests.delete( api_url+'user',
                     json={
                             "id" : user_id_2
                             },
@@ -280,9 +279,9 @@ class API_Test(unittest.TestCase):
     """
 
     def test6(self):
-        tester = app.test_client(self)
+        
 
-        response = tester.post('/user',
+        response = requests.post( api_url+'user',
                     json={
                             "name" : "sam",
                             "role" : "admin",
@@ -295,7 +294,7 @@ class API_Test(unittest.TestCase):
         admin_id = str(response_json['data']['id'])
 
 
-        response = tester.post('/user',
+        response = requests.post( api_url+'user',
                     json={
                             "name" : "olive",
                             "role" : "modifier",
@@ -307,7 +306,7 @@ class API_Test(unittest.TestCase):
         response_json = json.loads(response.text)
         modifier_id = str(response_json['data']['id'])
 
-        response = tester.post('/user',
+        response = requests.post( api_url+'user',
                     json={
                             "name" : "dave",
                             "role" : "watcher",
@@ -322,7 +321,7 @@ class API_Test(unittest.TestCase):
         """
         watcher checks
         """
-        response = tester.post('/user',
+        response = requests.post( api_url+'user',
                     json={
                             "name" : "lilly",
                             "role" : "watcher",
@@ -332,7 +331,7 @@ class API_Test(unittest.TestCase):
         response_code = response.status_code
         self.assertEqual(response_code , 403)
 
-        response = tester.put('/user',
+        response = requests.put( api_url+'user',
                     json={
                             "id" : modifier_id,
                             "role" : "watcher",
@@ -341,7 +340,7 @@ class API_Test(unittest.TestCase):
         response_code = response.status_code
         self.assertEqual(response_code , 403)
 
-        response = tester.delete('/user',
+        response = requests.delete( api_url+'user',
                     json={
                             "id" : watcher_id
                             },
@@ -349,7 +348,7 @@ class API_Test(unittest.TestCase):
         response_code = response.status_code
         self.assertEqual(response_code , 403)
 
-        response = tester.get('/user',
+        response = requests.get( api_url+'user',
                     json={'id':"0000"},
                     headers={'sender-id': watcher_id})
         response_code = response.status_code
@@ -361,7 +360,7 @@ class API_Test(unittest.TestCase):
         modifier checks
         """
 
-        response = tester.post('/user',
+        response = requests.post( api_url+'user',
                     json={
                             "name" : "lilly",
                             "role" : "modifier",
@@ -373,7 +372,7 @@ class API_Test(unittest.TestCase):
         response_json = json.loads(response.text)
         user_1 = str(response_json['data']['id'])
 
-        response = tester.put('/user',
+        response = requests.put( api_url+'user',
                     json={
                             "id" : watcher_id,
                             "role" : "modifier",
@@ -382,7 +381,7 @@ class API_Test(unittest.TestCase):
         response_code = response.status_code
         self.assertEqual(response_code , 200)
 
-        response = tester.delete('/user',
+        response = requests.delete( api_url+'user',
                     json={
                             "id" : user_1
                             },
@@ -390,7 +389,7 @@ class API_Test(unittest.TestCase):
         response_code = response.status_code
         self.assertEqual(response_code , 403)
 
-        response = tester.get('/user',
+        response = requests.get( api_url+'user',
                     json={'id':"0000"},
                     headers={'sender-id': modifier_id})
         response_code = response.status_code
@@ -402,7 +401,7 @@ class API_Test(unittest.TestCase):
         admin checks
         """
 
-        response = tester.post('/user',
+        response = requests.post( api_url+'user',
                     json={
                             "name" : "lilly",
                             "role" : "modifier",
@@ -412,7 +411,7 @@ class API_Test(unittest.TestCase):
         response_code = response.status_code
         self.assertEqual(response_code , 409)
 
-        response = tester.put('/user',
+        response = requests.put( api_url+'user',
                     json={
                             "id" : watcher_id,
                             "role" : "watcher",
@@ -421,7 +420,7 @@ class API_Test(unittest.TestCase):
         response_code = response.status_code
         self.assertEqual(response_code , 200)
 
-        response = tester.delete('/user',
+        response = requests.delete( api_url+'user',
                     json={
                             "id" : user_1
                             },
@@ -429,7 +428,7 @@ class API_Test(unittest.TestCase):
         response_code = response.status_code
         self.assertEqual(response_code , 200)
 
-        response = tester.get('/user',
+        response = requests.get( api_url+'user',
                     json={'id':"0000"},
                     headers={'sender-id': admin_id})
         response_code = response.status_code
@@ -440,7 +439,7 @@ class API_Test(unittest.TestCase):
         """
         delete the created users
         """
-        response = tester.delete('/user',
+        response = requests.delete( api_url+'user',
                     json={
                             "id" : modifier_id
                             },
@@ -449,7 +448,7 @@ class API_Test(unittest.TestCase):
         response_json = json.loads(response.text)
         self.assertEqual(response_code , 200)
 
-        response = tester.delete('/user',
+        response = requests.delete( api_url+'user',
                     json={
                             "id" : watcher_id
                             },
@@ -458,7 +457,7 @@ class API_Test(unittest.TestCase):
         response_json = json.loads(response.text)
         self.assertEqual(response_code , 200)
 
-        response = tester.delete('/user',
+        response = requests.delete( api_url+'user',
                     json={
                             "id" : admin_id
                             },
