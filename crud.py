@@ -78,7 +78,7 @@ class MongoAPI:
     def read(self):
         # sender action permission check
         if self.check_sender_permission('GET') is False:
-            output = {'message': 'sender permission error', 'status': '403'}
+            output = {'error': 'sender permission error', 'status': '403'}
             return output
            
         document = self.information.find_one({'id':self.body.id})
@@ -87,7 +87,7 @@ class MongoAPI:
             # return all users
             documents = self.information.find()
             if documents is not None:
-                output = {'message': 'document does not exist', 
+                output = {'warning': 'document does not exist', 
                             'data' : 
                                 [{item: data[item] for item in data if item != '_id'} \
                                     for data in documents],
@@ -108,13 +108,13 @@ class MongoAPI:
     def write(self):
         # sender action permission check
         if self.check_sender_permission('POST') is False:
-            output = {'message': 'sender permission error', 'status': '403'}
+            output = {'error': 'sender permission error', 'status': '403'}
             return output
 
         # first, find to check if document already exists
         document_exists = self.information.find_one(self.body.to_json())
         if document_exists is not None:
-            output = {'message': 'document already exists', 'status': '409'}
+            output = {'error': 'document already exists', 'status': '409'}
             return output
 
         # assign next available unique id
@@ -128,7 +128,7 @@ class MongoAPI:
         response2 = self.roles.insert_one({'role':self.body.role ,'id': self.body.id})
 
         if not response1 or not response2:
-            output = {'message': 'write operation failed', 'status': '400'}
+            output = {'error': 'write operation failed', 'status': '400'}
         else:
             output = {'message': 'write operation success',
                      'data':{
@@ -143,17 +143,17 @@ class MongoAPI:
     def delete(self):
         # sender action permission check
         if self.check_sender_permission('DELETE') is False:
-            output = {'message': 'sender permission error', 'status': '403'}
+            output = {'error': 'sender permission error', 'status': '403'}
             return output
 
         # first, find to check if document exists
         find_response_user = self.information.find_one({'id': self.body.id})
         if find_response_user is None:
-            output = {'message': 'document(in users) does not exists', 'status': '404'}
+            output = {'error': 'document(in users) does not exists', 'status': '404'}
             return output
         find_response_role = self.roles.find_one({'id': self.body.id})
         if find_response_role is None:
-            output = {'message': 'document(in roles) does not exists', 'status': '404'}
+            output = {'error': 'document(in roles) does not exists', 'status': '404'}
             return output
         
         # Now delete the document
@@ -161,7 +161,7 @@ class MongoAPI:
         response2 = self.roles.delete_one(self.body.__dict__)
 
         if response1.deleted_count <= 0 or response2.deleted_count <= 0:
-            output = {'message': 'delete operation failed', 'status': '400'}
+            output = {'error': 'delete operation failed', 'status': '400'}
         else:
             output = {'message': 'delete operation success', 'status': '200'}
 
@@ -171,7 +171,7 @@ class MongoAPI:
     def update(self):
         # sender action permission check
         if self.check_sender_permission('PUT') is False:
-            output = {'message': 'sender permission error', 'status': '403'}
+            output = {'error': 'sender permission error', 'status': '403'}
             return output
         
         filter = {'id':self.body.id}
@@ -180,12 +180,12 @@ class MongoAPI:
         # first, find to check if document exists
         find_response_user = self.information.find_one({'id': self.body.id})
         if find_response_user is None:
-            output = {'message': 'document(in users) does not exists', 'status': '404'}
+            output = {'error': 'document(in users) does not exists', 'status': '404'}
             return output
         if self.body.role is not None:
             find_response_role = self.roles.find_one({'id': self.body.id})
             if find_response_role is None:
-                output = {'message': 'document(in roles) does not exists', 'status': '404'}
+                output = {'error': 'document(in roles) does not exists', 'status': '404'}
                 return output
 
         # Now update the document
@@ -195,11 +195,11 @@ class MongoAPI:
         if self.body.role is not None:
             response2 = self.roles.update_one(filter, {"$set": {'role':self.body.role }} )
         if response1.modified_count == 0:
-            output = {'message': 'document does not exists', 'status': '404'} \
+            output = {'error': 'document does not exists', 'status': '404'} \
                 if response1.matched_count == 0 \
-                else {'message': 'document already exists', 'status': '409'}
+                else {'error': 'document already exists', 'status': '409'}
         elif response2 is not None and response2.modified_count == 0:
-            output = {'message': 'update operation failed', 'status': '400'}
+            output = {'error': 'update operation failed', 'status': '400'}
         else:
             output = {'message': 'update operation success', 'status': '200'}
 

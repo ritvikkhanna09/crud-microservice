@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def base():
-    return Response(response=json.dumps({"Status": "Running"}),
+    return Response(response=json.dumps({"status": "running"}),
                     status=200,
                     mimetype='application/json')
 
@@ -20,7 +20,8 @@ def user_read():
 
     # api request format checks
     if body is None or body == {} or body.id is None or sender_id is None or sender_id == '':
-        return Response(response=json.dumps({"Error": "Please provide correct API information"}),
+        return Response(response=json.dumps({"error": "Please provide correct API information",
+                                              "status": 400 }),
                         status=400,
                         mimetype='application/json')
 
@@ -39,12 +40,13 @@ def user_write():
 
     # retrieve header and body 
     sender_id = request.headers.get('sender_id') 
-    body = Document_To_Add(request.json)
+    body = Document_To_Update(request.json)
 
     # api request format checks
     if body is None or body == {} or body.email is None or body.name is None \
         or body.role is None or body.role not in ['admin','modifier','watcher']:
-        return Response(response=json.dumps({"Error": "Please provide correct API information"}),
+        return Response(response=json.dumps({"error": "Please provide correct API information",
+                                              "status": 400 }),
                         status=400,
                         mimetype='application/json')
 
@@ -66,7 +68,8 @@ def user_delete():
 
     # api request format checks
     if body is None or body == {} or body.id is None or sender_id is None or sender_id == '':
-        return Response(response=json.dumps({"Error": "Please provide correct API information"}),
+        return Response(response=json.dumps({"error": "Please provide correct API information",
+                                              "status": 400 }),
                         status=400,
                         mimetype='application/json')
 
@@ -88,7 +91,8 @@ def user_update():
 
     # api request format checks
     if body is None or body == {} or body.id is None or sender_id is None or sender_id == '':
-        return Response(response=json.dumps({"Error": "Please provide correct API information"}),
+        return Response(response=json.dumps({"error": "Please provide correct API information",
+                                              "status": 400 }),
                         status=400,
                         mimetype='application/json')
 

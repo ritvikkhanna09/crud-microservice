@@ -1,19 +1,18 @@
 from app import app
 from flask import json
-import unittest
 import requests
 
 api_url = "http://0.0.0.0:4001/"
 
 """
-run by command `python unit_tests.py -v`
+run by command `python integration_tests.py -v`
 """
 
 
 class API_Test(unittest.TestCase):
 
     """
-    Unit Test 0: connection test
+    Integration Test 0: connection test
     """
     def test0_connection(self):
         response = requests.get(api_url)
@@ -22,7 +21,7 @@ class API_Test(unittest.TestCase):
 
 
     """
-    Unit Test 1: User Creation / POST
+    Integration Test 1: User Creation / POST
         - creates a user successfully
         - creates the user again = 409 error
         - delete the user 
@@ -69,7 +68,7 @@ class API_Test(unittest.TestCase):
     
 
     """
-    Unit Test 2: User Deletion / DELETE
+    Integration Test 2: User Deletion / DELETE
         - creates a user successfully
         - delete the user 
         - delete the user = 404 error
@@ -107,7 +106,7 @@ class API_Test(unittest.TestCase):
 
 
     """
-    Unit Test 3: Required Fields
+    Integration Test 3: Required Fields
         - name, email, role are required fields
     """
     def test3(self):
@@ -122,7 +121,7 @@ class API_Test(unittest.TestCase):
 
 
     """
-    Unit Test 4: User Updation / PUT
+    Integration Test 4: User Updation / PUT
         - create 1 users
         - update user:
             - by all fields
@@ -197,7 +196,7 @@ class API_Test(unittest.TestCase):
 
 
     """
-    Unit Test 5: List Users / GET
+    Integration Test 5: List Users / GET
         - create 2 users
         - list:
             - using valid id
@@ -269,7 +268,7 @@ class API_Test(unittest.TestCase):
         self.assertEqual(response_code , 200)
 
     """
-    Unit Test 6: Users Permissions
+    Integration Test 6: Users Permissions
         - create 3 users of each ole
         - perform actions per user and checks
             - watcher can only GET
