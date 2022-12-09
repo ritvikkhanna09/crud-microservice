@@ -1,3 +1,7 @@
+# Python Copyright Information                                                                                  
+# Copyright (c) 2022 Ritvik Khanna                                                         
+# All Rights Reserved.                                                                                          
+                       
 import unittest
 import requests
 import json 

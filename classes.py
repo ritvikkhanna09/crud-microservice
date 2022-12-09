@@ -1,5 +1,8 @@
+# Python Copyright Information                                                                                  
+# Copyright (c) 2022 Ritvik Khanna                                                         
+# All Rights Reserved.                                                                                          
+                       
 import json
-
 
 class Document_By_ID:
     def __init__(self, data):

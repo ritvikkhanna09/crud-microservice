@@ -1,3 +1,8 @@
+# Python Copyright Information                                                                                  
+# Copyright (c) 2022 Ritvik Khanna                                                         
+# All Rights Reserved.                                                                                          
+                       
+
 from flask import Flask, request, json, Response
 from crud import MongoAPI
 from classes import *
